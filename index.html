@@ -1189,7 +1189,7 @@ const chOpen=c=>{const t=W2().ch[c.i];return t&&Date.now()-t<CHRESP[c.tier]};
 let W2N=null,CAMPRT={},FBRT={},w2tk=0;
 function w2Near(){return modalOpen()?null:W2N}
 // ===== 매 프레임 =====
-function w2Tick(dt){const W=W2();if((typeof BS!=='undefined'&&BS.on)||(typeof DG!=='undefined'&&DG.on)){W2N=null;return}
+function w2Tick(dt){const W=W2();if((typeof BS!=='undefined'&&BS.on)||(typeof DG!=='undefined'&&DG.on)){let best=null,bd=1e9;const cand=(o,d,r)=>{if(d<r&&d<bd){bd=d;best=o}};try{if(DG.on)dgCand(cand);if(BS.on)bsCand(cand)}catch(e){}W2N=best;return}
  // 탐험 질주: 전투가 없으면 점점 빨라짐
  const fight=enemies.some(e=>e.ag&&!e.dead&&e.type!=='dummy'&&Math.abs(e.x-P.x)<900&&Math.abs(e.y-P.y)<900);const tgt=!fight&&P.moving&&P.cd<-1.2&&T-(P.lastHit||-9)>3?1.45:1;P.spr=(P.spr||1)+(tgt-(P.spr||1))*Math.min(1,dt*(tgt>1?.9:6));
  // 주변 상호작용
@@ -2070,6 +2070,18 @@ G4('sniper','사코 TRG M10',{dmg:.5,range:.25,spread:-.1},fB('.338 라푸아 �
 G4('sniper','루거 프리시전 라이플',{spread:-.15,rate:.1},fB('6.5mm 크리드무어',2.3,[2.6,30,'#ffffff']),'볼트액션 · 섀시형',10,'반동이 부드러운 6.5mm 정밀 소총',{rl:18,rc:'#2a2c30',top:2,hg:14,hgt:'rail',bl:14,st:'skel',sc:DK,slen:16,mag:{t:'box',x:6,w:5,h:6,c:DK},bolt:1});
 G4('sniper','CZ 750',{dmg:.25,spread:-.1},fB('7.62×51mm',2.5),'볼트액션',10,'체코제 경찰 저격총',{rl:18,rc:'#3d4148',hg:16,hgt:'round',hgc:'#4a5a3a',bl:15,st:'thumb',sc:'#4a5a3a',slen:18,mag:{t:'box',x:6,w:5,h:6,c:DK},top:1,bolt:1,brake:1});
 G4('sniper','M21',{rate:1.1,dmg:-.25},fSA('7.62×51mm',1.9),'가스 작동식 · 반자동',20,'M14 기반 베트남전 저격소총',{rl:16,rc:'#3d4148',hg:16,hgt:'wood',hgc:WD,bl:10,st:'solid',sc:WD,slen:17,mag:{t:'box',x:5,w:5,h:8,c:DK},fs:1,top:1});
+// ===== 실총 확장팩 5: 2차대전 소총·기관총 11종 =====
+G4('rifle','AVS-36',{dmg:.6,rate:-.05,spread:.4,range:.1,recoil:.5},fA('7.62×54mmR',1.8,'완전자동 · 반자동',B762),'가스 작동식 · 수직 낙하 블록 노리쇠',15,'시모노프가 만든 소련 최초의 자동소총 — 위력은 세지만 반동이 엄청나',{rl:18,rc:'#2f3236',hg:17,hgt:'wood',hgc:'#5b3a22',gas:'#2a2c30',bl:12,bc:'#2a2c30',st:'solid',sc:'#5b3a22',slen:19,mag:{t:'box',x:7,w:5,h:11,cant:1.5,c:'#3a3d42'},brake:1,fs:1});
+G4('dmr','SVT-40',{dmg:.2,rate:.15,spread:.05},fD('7.62×54mmR',1.6),'가스 작동식 · 틸팅 노리쇠',10,'토카레프가 만든 소련 반자동 소총, 총구에 큼직한 제퇴기',{rl:16,rc:'#2f3236',hg:16,hgt:'wood',hgc:'#6a4424',gas:'#2a2c30',bl:11,st:'solid',sc:'#6a4424',slen:18,mag:{t:'box',x:6,w:4.5,h:7,c:DK},brake:1,fs:1});
+G4('dmr','Gewehr 43',{dmg:.25,spread:-.05,reload:.1},fD('7.92×57mm 마우저',1.7),'가스 작동식 · 플랩 잠금',10,'독일군 반자동 소총 — 조준경 레일이 기본',{rl:16,rc:'#2f3236',hg:15,hgt:'wood',hgc:'#6e4a2a',bl:10,st:'solid',sc:'#6e4a2a',slen:17,mag:{t:'box',x:6,w:4.5,h:8,c:DK},fs:1});
+G4('dmr','M1 카빈',{dmg:-.35,rate:.45,spread:.05,range:-.15,movepen:-.25,reload:-.15},fD('.30 카빈',1,'반자동',B556),'가스 작동식 · 쇼트 스트로크 피스톤',15,'가볍고 짧아서 들고 뛰기 좋은 미군 카빈',{rl:14,rc:'#3d4148',hg:12,hgt:'wood',hgc:'#7a5232',bl:8,st:'solid',sc:'#7a5232',slen:15,mag:{t:'box',x:5,w:4,h:6,c:DK}});
+G4('rifle','FG 42',{dmg:.45,rate:.1,spread:.3,range:.1},fA('7.92×57mm 마우저',1.6,'완전자동 · 반자동',B762),'가스 작동식 · 회전 노리쇠 · 측면 탄창',20,'독일 공수부대용 자동소총, 접이식 양각대',{rl:20,rc:'#3a3d36',hg:8,hgt:'shroud',hgc:'#3a3d36',bl:12,st:'solid',sc:'#6a4a2a',slen:15,mag:{t:'side',x:4,c:DK},bip:1,brake:1,gx:2});
+G4('rifle','페도로프 아브토마트',{dmg:.15,rate:-.2,spread:.15},fA('6.5×50mm 아리사카',1.2,'완전자동',BAK),'반동 이용식 · 쇼트 리코일',25,'1916년 러시아 — 사실상 세계 최초의 돌격소총',{rl:16,rc:'#2f3236',hg:12,hgt:'wood',hgc:WD,bl:9,st:'solid',sc:WD,slen:16,mag:{t:'curve',x:5,w:5,h:10,c:DK},fs:1});
+G4('lmg','쇼샤 M1915',{rate:-.6,spread:.35,dmg:.2,reload:.2},fL('8mm 르벨',1.3,'완전자동 (반달 탄창)',[2.8,20,'#ffcf8a']),'반동 이용식 · 롱 리코일 · 오픈볼트',20,'반달 모양 탄창의 1차대전 프랑스 기관총 — 잘 걸려',{rl:22,rc:'#3d4148',hg:6,hgt:'shroud',hgc:'#3d4148',bl:12,st:'solid',sc:WD,slen:15,mag:{t:'curve',x:9,w:6,h:13,c:'#3d4148'},bip:1});
+G4('lmg','BAR M1918',{dmg:.35,rate:-.35,spread:-.1},fL('.30-06 스프링필드',1.3,'완전자동 (저속·고속)',B762),'가스 작동식 · 틸팅 노리쇠',20,'2차대전 미군 분대의 화력, 브라우닝 자동소총',{rl:20,rc:'#3d4148',hg:12,hgt:'wood',hgc:WD,bl:12,st:'solid',sc:WD,slen:17,mag:{t:'box',x:7,w:5,h:9,c:DK},bip:1,brake:1});
+G4('smg','PPD-40',{mag:1.2,rate:-.1,spread:.1},fS('7.62×25mm 토카레프',.75,'완전자동 (드럼)',[1.8,12,'#ffcf8a']),'오픈볼트 블로우백 · 71발 드럼',71,'PPSh 이전의 소련 기관단총, 나무 개머리',{rl:15,rc:'#2f3236',hg:11,hgt:'shroud',hgc:'#2f3236',bl:5,st:'solid',sc:WD,slen:17,mag:{t:'drum',x:3,w:6,r:7.5,c:'#2f3236'},fs:1});
+G4('smg','베레타 M1938',{spread:-.15,dmg:.05,rate:-.1},fS('9×19mm',.62,'완전자동 (방아쇠 2개)'),'블로우백 · 이중 방아쇠',40,'방아쇠가 두 개인 이탈리아 기관단총',{rl:16,rc:'#2f3236',hg:10,hgt:'shroud',hgc:'#2f3236',bl:6,st:'solid',sc:'#7a5232',slen:17,mag:{t:'box',x:4,w:4,h:12,c:DK},brake:1});
+G4('sniper','아리사카 99식',{dmg:.2,reload:-.1,spread:-.05},fB('7.7×58mm 아리사카',2.6),'볼트액션 · 마우저식',5,'2차대전 일본군 볼트액션 소총',{rl:16,rc:'#3d4148',hg:22,hgt:'wood',hgc:'#6e4a2a',bl:8,st:'solid',sc:'#6e4a2a',slen:18,mag:{t:'none'},bolt:1,fs:1});
 
 const ancC={},dummy=document.createElement('canvas').getContext('2d');
 function anchorsOf(type,mdl){const k=type+(mdl||0);return ancC[k]||(ancC[k]=GUNS[k](dummy,{}))}
@@ -2845,7 +2857,7 @@ function render(){
   else if(des&&i>=0&&j>=0){cx.fillStyle='rgba(150,110,60,.18)';cx.fillRect(tx,j*TS+h*50,TS,2);cx.fillRect(tx+10,j*TS+h*50+7,TS-24,1.5)}
   else if(vol&&h>.6){cx.fillStyle='rgba(255,90,20,.35)';cx.fillRect(tx+h*30,ty+h*40,14,1.6)}else if(swp&&h>.62){cx.fillStyle='rgba(120,170,150,.22)';cx.fillRect(tx+h*30,ty+h*40,16,2)}
   else if(h>.7&&i>=0&&j>=0){cx.fillStyle='rgba(160,220,120,.18)';cx.fillRect(tx+h*40,j*TS+h*30,3,7);cx.fillRect(tx+h*40+5,j*TS+h*30+2,3,6)}}
- groundTex(x0,x1,y0,y1);cloudShadows(x0,x1,y0,y1);drawPools(x0,x1,y0,y1);w2Ground(x0,x1,y0,y1);cx.fillStyle='#8d7552';cx.fillRect(VC.x-36,BC.y,72,VC.y-BC.y);cx.fillRect(VC.x,VC.y-36,RDX+400-VC.x,72);cx.fillRect(VC.x-36,VC.y,72,RSNY-VC.y);cx.fillStyle='#b8c4cc';cx.fillRect(VC.x-36,SNY,72,420);
+ if(!(BS&&BS.on)&&!DG.on)groundTex(x0,x1,y0,y1);cloudShadows(x0,x1,y0,y1);drawPools(x0,x1,y0,y1);w2Ground(x0,x1,y0,y1);cx.fillStyle='#8d7552';cx.fillRect(VC.x-36,BC.y,72,VC.y-BC.y);cx.fillRect(VC.x,VC.y-36,RDX+400-VC.x,72);cx.fillRect(VC.x-36,VC.y,72,RSNY-VC.y);cx.fillStyle='#b8c4cc';cx.fillRect(VC.x-36,SNY,72,420);
  cx.fillStyle='rgba(0,0,0,.08)';for(let x=Math.max(VC.x,Math.floor(x0/40)*40);x<Math.min(RDX+400,x1);x+=40)cx.fillRect(x,VC.y-3,22,6);
  cx.beginPath();cx.ellipse(VC.x,VC.y,VR,VR*.92,0,0,7);cx.fillStyle='#9c8460';cx.fill();
  cx.beginPath();cx.ellipse(VC.x,VC.y,VR-26,VR*.92-26,0,0,7);cx.fillStyle='#a88f69';cx.fill();drawRange();
@@ -4035,7 +4047,7 @@ function openGuide(){paused=true;modal.hidden=false;const g=BOOTQ.filter(([m])=>
  sheet.innerHTML=`<div class="setp"><div class="inv-head"><div class="ttl"><h2>👋 파츠헌터에 온 걸 환영해!</h2><small>30초면 다 알 수 있어. 나중에 설정 → 도움말에서 다시 볼 수 있어</small></div></div><div class="set-body">${helpBody()}${g.length?`<div class="hcard gift"><b>🎁 받은 선물</b><ul>${g.map(([m,c])=>`<li style="color:${c||'#eef3e4'}">${m}</li>`).join('')}</ul></div>`:''}<button class="btn pri big" data-a="tutOk">좋아, 시작하자!</button></div></div>`}
 function openMap(){paused=true;modal.hidden=false;renderMap()}
 function doRecall(){if(BS&&BS.on&&BS.raid)return;if(BS&&BS.on)bsExit(true,1);if(DG.on)dgExit(false,true);if((P.recallAt||0)>T)return;P.recallAt=T+90;P.x=VC.x;P.y=VC.y+120;SFX.level();toast('마을로 귀환했다','#9bd36a');for(let i=0;i<30;i++){const a=rnd(0,7);parts.push({x:P.x,y:P.y,z:rnd(0,40),vx:Math.cos(a)*120,vy:Math.sin(a)*120,l:.6,c:'#9fe0ff',s:4})}}
-function drawGuides(V,camX,camY){if(P.dead||DG.on)return;const tg=[];
+function drawGuides(V,camX,camY){if(P.dead||DG.on||(BS&&BS.on))return;const tg=[];
  if(!S.q.active||qDone())tg.push({x:NPC.x,y:NPC.y,c:'#f2b84b',t:'촌장'});
  if(S.sys&&S.sys.merchant&&S.sys.merchant.until>T)tg.push({x:S.sys.merchant.x,y:S.sys.merchant.y,c:'#c58bff',t:'상인'});
  if(S.pin&&!BS.on){if(dist(P.x,P.y,S.pin.x,S.pin.y)<120){S.pin=null;toast('목표 지점 도착!','#70c8ff')}else tg.push({x:S.pin.x,y:S.pin.y,c:'#70c8ff',t:'목표'})}
@@ -4367,7 +4379,7 @@ function netMsg(m){const t=m.t;
   NET.on=true;NET.retry=2;NET.id=m.you;NET.status='접속됨';NET.players.clear();for(const p of m.players||[])netAddP(p);NET.bases.clear();for(const b of m.bases||[])netBase(b,1);NET.log=m.log||[];NET.motd=m.motd||'';
   const mine=NET.bases.get(NET.id);
   if(mine){S.base={x:mine.x,y:mine.y,name:mine.name,slot:mine.slot,srv:1,def:mine.def,shield:mine.shield};S.baseKit=0;if(m.vault)netVaultIn(m.vault)}
-  else if(S.base){if(S.base.local){const b=S.base;S.base=null;netSend({t:'base_place',x:b.x,y:b.y,name:b.name,vault:{items:S.bank||[],gold:S.vgold||0,parts:S.vparts||0}});toast('오프라인 기지를 서버에 등록하는 중…','#9fe0ff')}else{S.base=null;S.baseKit=1;toast('서버에서 기지가 사라졌어 (관리자 삭제 또는 월드 초기화) — 창고 물건은 남아 있으니 기지를 다시 설치해','#ffb02e')}}
+  else if(S.base){if(S.base.local){const b=S.base;S.base=null;S.baseKit=1;netSend({t:'base_place',x:b.x,y:b.y,name:b.name,vault:{items:S.bank||[],gold:S.vgold||0,parts:S.vparts||0}});toast('오프라인 기지를 서버에 등록하는 중…','#9fe0ff')}else{S.base=null;S.baseKit=1;toast('서버에서 기지가 사라졌어 (관리자 삭제 또는 월드 초기화) — 창고 물건은 남아 있으니 기지를 다시 설치해','#ffb02e')}}
   baseCv=null;NET.lkSig='';NET.stT=1;NET.reseedAt=m.reseedAt||0;if(m.admin){NET.admin=true;unlockAdmin()}save();chatLine(null,`서버 접속! 현재 ${NET.players.size+1}명`,'#70f5ff');if(NET.reseedAt)chatLine(null,`⏳ 월드 초기화 예약: ${new Date(NET.reseedAt).toLocaleString('ko-KR')}`,'#ffb02e');if(NET.motd)chatLine(null,'📢 '+NET.motd,'#ffe27a');
   const ak=lsG(AK('ph_admk'));if(ak)netSend({t:'admin_auth',key:ak});return}
  if(t==='join'){netAddP(m.p);chatLine(null,`${m.p.n} 님이 들어왔어`,'#9fb19f');return}
@@ -4383,8 +4395,8 @@ function netMsg(m){const t=m.t;
  if(t==='ann'){chatLine(null,'📢 '+m.m,'#ffe27a');toast('📢 '+m.m,'#ffe27a');SFX.quest&&SFX.quest();return}
  if(t==='base'){netBase(m.b);return}
  if(t==='base_rm'){NET.bases.delete(m.owner);baseCv=null;if(m.owner===NET.id){S.base=null;S.baseKit=1;toast('내 기지가 철거됐어 (기지 패널에서 다시 설치 가능)','#ffb02e');save()}if(BS.on&&BS.o.owner===m.owner)bsExit(true);return}
- if(t==='vault'){if(m.conflict){const sv=m.v,keep=(S.bank||[]).filter(i=>NET.vAdd.has(i.id)&&!sv.items.some(j=>j.id===i.id));sv.items=sv.items.filter(i=>!NET.vRem.has(i.id)).concat(keep);NET.vver=sv.ver;netVaultIn(sv,1);netVaultSync()}else netVaultIn(m.v);if(BKV&&!modal.hidden&&sheet.querySelector('.shop'))renderBank();return}
- if(t==='vault_ok'){NET.vver=m.ver;NET.vAdd.clear();NET.vRem.clear();return}
+ if(t==='vault'){if(m.conflict){NET.vBusy=0;const sv=m.v;sv.gold=Math.max(0,(sv.gold||0)+(NET.vgS||0)+(NET.vgD||0));sv.parts=Math.max(0,(sv.parts||0)+(NET.vpS||0)+(NET.vpD||0));NET.vgS=NET.vpS=NET.vgD=NET.vpD=0;const keep=(S.bank||[]).filter(i=>NET.vAdd.has(i.id)&&!sv.items.some(j=>j.id===i.id));sv.items=sv.items.filter(i=>!NET.vRem.has(i.id)).concat(keep);NET.vver=sv.ver;netVaultIn(sv,1);netVaultSync()}else netVaultIn(m.v);if(BKV&&!modal.hidden&&sheet.querySelector('.shop'))renderBank();return}
+ if(t==='vault_ok'){NET.vver=m.ver;NET.vBusy=0;NET.vgS=NET.vpS=0;if(NET.vDirty){NET.vDirty=0;netVaultSync()}else{NET.vAdd.clear();NET.vRem.clear()}return}
  if(t==='packed'){netVaultIn(m.v,1);S.base=null;S.baseKit=1;toast('기지를 철거했어 — 키트로 다른 곳에 다시 설치할 수 있어','#9fe0ff');save();if(sheet.querySelector('#bsPanel'))renderBasePanel();return}
  if(t==='raid_ok'){S.c4=Math.max(0,(S.c4||0)-1);closeModal();bsEnter(m.b,true,m.time);save();return}
  if(t==='raid_no'){toast('털기 실패: '+m.m,'#ff6a5c');if(BS.on&&BS.raid)bsExit(true,1);return}
@@ -4415,7 +4427,7 @@ function netAddP(p){const r={id:p.id,n:p.n||'헌터',lv:p.lv||1,x:p.x||0,y:p.y||
 function netBase(b,quiet){const had=NET.bases.has(b.owner);NET.bases.set(b.owner,b);if(!had){clearObs(b.x,b.y-30,170);baseCv=null}
  if(b.owner===NET.id){if(!S.base||!S.base.srv){S.baseKit=0;if(!quiet){toast(`🏠 기지 설치 완료! 「${b.name}」`,'#9be36a');SFX.quest&&SFX.quest()}}S.base={x:b.x,y:b.y,name:b.name,slot:b.slot,srv:1,def:b.def,shield:b.shield};save()}}
 function netVaultIn(v,noAdd){S.bank=v.items||[];S.vgold=v.gold||0;S.vparts=v.parts||0;NET.vver=v.ver||0;if(!noAdd){NET.vAdd.clear();NET.vRem.clear()}}
-function netVaultSync(){if(!(NET.on&&S.base&&S.base.srv))return;netSend({t:'vault_set',ver:NET.vver,v:{items:S.bank||[],gold:S.vgold||0,parts:S.vparts||0}})}
+function netVaultSync(){if(!(NET.on&&S.base&&S.base.srv))return;if(NET.vBusy&&NET.vBusy>performance.now()){NET.vDirty=1;return}NET.vBusy=performance.now()+4000;NET.vDirty=0;NET.vgS=(NET.vgS||0)+(NET.vgD||0);NET.vpS=(NET.vpS||0)+(NET.vpD||0);NET.vgD=NET.vpD=0;netSend({t:'vault_set',ver:NET.vver,v:{items:S.bank||[],gold:S.vgold||0,parts:S.vparts||0}})}
 function netTp(x,y,z){if(BS.on)bsExit(true,1);if(DG.on)dgExit(false,true);if(z&&z.startsWith('b:')){const b=allBases().find(b=>b.owner===z.slice(2));if(b){bsEnter(b,false);return}}const[a,c]=freeSpot(x,y);P.x=a;P.y=c;P.inv=T+1.5;lastFc=-1;closeModal()}
 // ---- 매 프레임 ----
 function lkPack(){const w=curW();let wp=null;if(w){const its=[];for(const v of Object.values(w.atts||{})){const i=item(v);if(i)its.push(i)}if(w.wc)for(const v of Object.values(w.wc)){if(typeof v==='number'){const i=item(v);if(i)its.push(i)}}wp={w,its}}return{look:S.look,pl:P.look,cos:P.cos||null,cosA:P.cosA||null,w:wp}}
@@ -4528,7 +4540,7 @@ function bsDraw(x0,x1,y0,y1){const R=BS.R;cx.fillStyle='#17130f';cx.fillRect(x0-
  cx.fillStyle='rgba(140,40,40,.55)';cx.beginPath();cx.roundRect(R.cx-260,R.cy-60,520,260,30);cx.fill();cx.strokeStyle='rgba(230,190,90,.5)';cx.lineWidth=4;cx.stroke();
  cx.fillStyle='#3a3026';cx.fillRect(R.x-20,R.y-70,R.w+40,70);cx.fillStyle='#4e4236';cx.fillRect(R.x-20,R.y-70,R.w+40,8);cx.fillStyle='rgba(0,0,0,.35)';cx.fillRect(R.x,R.y,R.w,22);
  for(let tx=R.x+120;tx<R.x+R.w-60;tx+=300){cx.save();cx.globalCompositeOperation='lighter';const g=cx.createRadialGradient(tx,R.y-10,2,tx,R.y-10,110);g.addColorStop(0,'rgba(255,190,100,.35)');g.addColorStop(1,'rgba(255,190,100,0)');cx.fillStyle=g;cx.beginPath();cx.arc(tx,R.y-10,110,0,7);cx.fill();cx.restore();cx.fillStyle='#ffd27a';cx.fillRect(tx-4,R.y-30,8,10)}
- cx.fillStyle='#2a1f16';cx.fillRect(R.cx-60,R.y+R.h-6,120,16);cx.fillStyle='rgba(155,227,106,.25)';cx.fillRect(R.cx-50,R.y+R.h-30,100,24)}
+ {const wc='#3a3026',wt='#4e4236';cx.fillStyle=wc;cx.fillRect(R.x-40,R.y-70,40,R.h+130);cx.fillRect(R.x+R.w,R.y-70,40,R.h+130);cx.fillRect(R.x-40,R.y+R.h,R.w/2-60+40,60);cx.fillRect(R.cx+60,R.y+R.h,R.w/2-60+40,60);cx.fillStyle=wt;cx.fillRect(R.x-40,R.y+R.h,R.w/2-60+40,8);cx.fillRect(R.cx+60,R.y+R.h,R.w/2-60+40,8);cx.fillRect(R.x-8,R.y-70,8,R.h+70);cx.fillRect(R.x+R.w,R.y-70,8,R.h+70)}cx.fillStyle='#2a1f16';cx.fillRect(R.cx-60,R.y+R.h-6,120,16);cx.fillStyle='rgba(155,227,106,.25)';cx.fillRect(R.cx-50,R.y+R.h-30,100,24)}
 function bsList(list,x0,x1,y0,y1){if(!BS.on)return;const R=BS.R,o=BS.o,col=bsCol(o.owner);
  list.push({y:R.cy-330,f:()=>{const x=R.cx,y=R.cy-330;cx.fillStyle='rgba(0,0,0,.35)';cx.beginPath();cx.ellipse(x,y+4,70,18,0,0,7);cx.fill();const g=cx.createLinearGradient(x-56,0,x+56,0);g.addColorStop(0,'#3a4048');g.addColorStop(.5,'#6a737e');g.addColorStop(1,'#2e333a');cx.fillStyle=g;cx.beginPath();cx.roundRect(x-56,y-96,112,100,8);cx.fill();cx.strokeStyle='#1a1d22';cx.lineWidth=3;cx.stroke();
   cx.fillStyle='#262a30';cx.beginPath();cx.arc(x,y-48,26,0,7);cx.fill();cx.strokeStyle='#c9a23a';cx.lineWidth=4;cx.beginPath();cx.arc(x,y-48,20,0,7);cx.stroke();for(let i=0;i<6;i++){const a=i/6*7+T*.3;cx.beginPath();cx.moveTo(x,y-48);cx.lineTo(x+Math.cos(a)*18,y-48+Math.sin(a)*18);cx.stroke()}
@@ -4554,7 +4566,7 @@ function bsPlace(){if(S.base)return toast('이미 기지가 있어','#ff9a5c');i
  if(NET.on){netSend({t:'base_place',x,y,name:nm,vault:{items:S.bank||[],gold:S.vgold||0,parts:S.vparts||0}});toast('기지 설치 요청 중…','#9fe0ff')}
  else{S.base={x,y,name:nm,slot:0,local:1,def:{tur:0,wall:0,guard:0}};S.baseKit=0;toast(`🏠 기지 설치 완료! 「${nm}」 (오프라인 기지 — 서버에 접속하면 자동 등록)`,'#9be36a');SFX.quest&&SFX.quest();save()}closeModal()}
 function bsPack(){if(!S.base)return;if(BS.on)bsExit(true,1);if(NET.on&&S.base.srv)netSend({t:'base_pack'});else{S.base=null;S.baseKit=1;toast('기지를 철거했어 — 키트로 다시 설치할 수 있어','#9fe0ff');save();renderBasePanel()}}
-function canTp(){if(BS.on&&BS.raid)return'털기 중엔 못 해';if(T-P.lastHit<6)return'전투 중이야 (6초 동안 안 맞아야 해)';if(enemies.some(e=>!e.dead&&e.ag&&e.type!=='dummy'&&dist(e.x,e.y,P.x,P.y)<650))return'근처에 싸우는 적이 있어';if(NET.tpAt>T)return`재사용 대기 ${Math.ceil(NET.tpAt-T)}초`;return''}
+function canTp(){if(BS.on&&BS.raid)return'털기 중엔 못 해';if(BS.on&&!BS.raid&&NET.tpAt<=T)return'';if(T-P.lastHit<6)return'전투 중이야 (6초 동안 안 맞아야 해)';if(enemies.some(e=>!e.dead&&e.ag&&e.type!=='dummy'&&dist(e.x,e.y,P.x,P.y)<650))return'근처에 싸우는 적이 있어';if(NET.tpAt>T)return`재사용 대기 ${Math.ceil(NET.tpAt-T)}초`;return''}
 function tpBase(force){const b=myBase();if(!b)return toast('기지가 없어','#ff9a5c');const why=force?'':canTp();if(why)return toast('순간이동 불가: '+why,'#ff6a5c');NET.tpAt=T+20;bsEnter(b,false);for(let i=0;i<20;i++){const a=i/20*7;parts.push({x:P.x,y:P.y,z:10,vx:Math.cos(a)*120,vy:Math.sin(a)*60,l:.5,c:'#9be36a',s:4})}}
 function tpSpawn(){const why=canTp();if(why)return toast('순간이동 불가: '+why,'#ff6a5c');NET.tpAt=T+20;if(BS.on)bsExit(true,1);if(DG.on)dgExit(false,true);P.x=VC.x;P.y=VC.y+120;P.inv=T+1.5;lastFc=-1;closeModal();toast('스폰(마을)으로 순간이동','#9be36a')}
 const DEFC={tur:[120,'포탑',6],wall:[90,'바리케이드',5],guard:[150,'경비 로봇',6]};
@@ -4698,7 +4710,7 @@ sheet.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[
  if(n==='def'){defUp(b.dataset.k);return}if(n==='c4'){c4Make();return}if(n==='place'){bsPlace();return}if(n==='pack'){bsPack();return}
  if(n==='visIn'){const bb=allBases().find(x=>x.owner===o);if(bb)bsEnter(bb,false);return}
  if(n==='raid'){if(!(S.c4>0))return toast('폭약이 없어','#ff6a5c');netSend({t:'raid_start',owner:o});toast('기지 털기 시도 중…','#ffb02e');return}
- if(n==='vg'||n==='vp'){const gk=n==='vg'?'gold':'parts',vk=n==='vg'?'vgold':'vparts';if(b.dataset.v==='in'){const a=Math.floor((S[gk]||0)*.5);S[gk]-=a;S[vk]=(S[vk]||0)+a}else{S[gk]=(S[gk]||0)+(S[vk]||0);S[vk]=0}save();netVaultSync();renderBank();return}
+ if(n==='vg'||n==='vp'){const gk=n==='vg'?'gold':'parts',vk=n==='vg'?'vgold':'vparts',v0=S[vk]||0,dk=n==='vg'?'vgD':'vpD';if(b.dataset.v==='in'){const a=Math.floor((S[gk]||0)*.5);S[gk]-=a;S[vk]=(S[vk]||0)+a}else{S[gk]=(S[gk]||0)+(S[vk]||0);S[vk]=0}NET[dk]=(NET[dk]||0)+((S[vk]||0)-v0);save();netVaultSync();renderBank();return}
  if(n==='vlock'){BKLOCK=!BKLOCK;renderBank();return}
  if(n==='skinPick'){const w=item(+b.dataset.w);if(!w)return;if(o==='none'){const cs=w.wc&&item(w.wc.skin);if(cs)wcOff(cs);toast('기본 외형으로','#cfe6cf')}else{const sk=item(+o);if(!sk)return;wcSet(w,sk);SFX.magIn&&SFX.magIn();toast(`${iname(sk)} 적용`,RAR[sk.r].c)}if(w.id===S.eq)recalc();NET.lkSig='';save();renderBag();return}
  if(n==='admAnn'||n==='admMotd'){const i=$('admAnn');if(i&&i.value.trim()){netSend({t:'adm',c:n==='admAnn'?'ann':'motd',m:i.value.trim()});i.value=''}return}
